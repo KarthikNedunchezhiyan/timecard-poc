@@ -1,0 +1,75 @@
+<html>
+
+<head>
+  <style>
+    #matrix {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      flex-wrap: wrap;
+      width: 300px;
+      height: 300px;
+    }
+
+    .cell {
+      width: 30px;
+      height: 30px;
+      background-color: black;
+      margin: 3px;
+    }
+
+    .glow {
+      background-color: aquamarine;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="matrix"></div>
+  <script>
+    // global
+    let intervalId = null;
+    let mouseHoldSatisfied = false;
+    document.addEventListener('mousedown', () => {
+      intervalId = setTimeout(() => {
+        mouseHoldSatisfied = true;
+      }, 200);
+    });
+
+    document.addEventListener('mouseup', () => {
+      mouseHoldSatisfied = false;
+      clearInterval(intervalId);
+    });
+
+    function toggleCellGlow(cell) {
+      if (cell.classList.contains("glow")) {
+        return cell.classList.remove('glow');
+      }
+      cell.classList.add('glow');
+    }
+    const matrix = document.getElementById('matrix');
+    matrix.addEventListener('dragstart', (event) => {
+      event.preventDefault();
+    });
+    for (let i = 1; i <= 72; ++i) {
+      const cell = document.createElement("div");
+      cell.classList.add("cell");
+      cell.id = `cell-${i}`;
+      cell.setAttribute("draggable", "false");
+      cell.addEventListener('dragstart', (event) => {
+        event.preventDefault();
+      });
+      cell.addEventListener('mouseenter', () => {
+        if (mouseHoldSatisfied) { toggleCellGlow(cell); }
+      });
+      cell.addEventListener('mousedown', () => {
+        toggleCellGlow(cell);
+      });
+      matrix.appendChild(cell);
+    }
+  </script>
+</body>
+
+</html>
